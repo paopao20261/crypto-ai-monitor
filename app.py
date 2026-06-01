@@ -1,22 +1,15 @@
 import streamlit as st
-
-st.set_page_config(
-    page_title="Crypto AI Monitor",
-    layout="wide"
-)
+import requests
 
 st.title("🚀 Crypto AI Monitor")
-st.subheader("AI Crypto Dashboard")
-st.success("部署成功")
 
-st.write("选择币种查看信息")
+coin = st.selectbox("选择币种", ["BTC", "ETH", "SOL", "BNB"])
 
-coin = st.selectbox(
-    "选择币种",
-    ["BTC","ETH","SOL","BNB"]
-)
+def get_price(symbol):
+    url = f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}USDT"
+    data = requests.get(url).json()
+    return float(data["price"])
 
-st.metric(
-    label=f"{coin} 最新价格",
-    value="$0.00"
-)
+price = get_price(coin)
+
+st.metric(label=f"{coin} 最新价格", value=f"${price:,.2f}")
